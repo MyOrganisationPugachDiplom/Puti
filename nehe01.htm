@@ -1,0 +1,2105 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 3.2 final//ru">
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<meta name="description" content="Переводы по OpenGL, трехмерная графика, игры, мультимедия
+Translations Russian OpenGL
+">
+<meta name="keyword" content="Программирование,игры,3D,трехмерная графика,OpenGL,NeHe">
+<meta name="keyword" content="programming,C,C++,game,graphics">
+<title>Урок 1. Инициализация в Windows</title>
+<link rel="stylesheet" href="nehe01_files/pmg.css" type="text/css">
+</head>
+
+
+
+<body bgcolor="#b2d3e1" link="#D621AD" vlink="#800080">
+<script src="nehe01_files/nehe.js" language="javascript">
+<!--
+//-->
+</script>
+
+<center>
+<div id="top">
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tbody><tr>
+        <td align="center" valign="center" width="20%">
+        <img src="nehe01_files/nehelogo.jpg" alt="NeHe Tutorials" align="left" height="50" hspace="0" width="125">
+        </td>
+        <td align="center" width="60%">
+	<a href="http://pmg.org.ru/nehe/index.html" onmouseover=" return event_over(this,'NeHe Ru.')  " onmouseout=" return event_out(this) ">
+        <font class="linksbig">
+        Народный учебник по OpenGL</font></a><br>
+        </td>
+        <td align="center" valign="center" width="20%">
+        <img src="nehe01_files/nehe01.jpg" alt="Урок 1. OpenGL" align="right" height="60" hspace="0" width="80">
+        </td>
+    </tr>
+</tbody></table>
+</div>
+
+<div style="width: 1000px;" id="head">
+<p class="head1">
+Урок 1. Инициализация в Windows
+</p>
+</div>
+
+<div style="width: 1000px;" id="main" bgcolor="#c0dbe4">
+<p class="textnoalign" align="left">
+
+<a href="http://nehe.gamedev.net/data/lessons/lesson.asp?lesson=01" target="_blank" onmouseover=" return event_over(this,this)  " onmouseout=" return event_out(this) ">
+<font class="link"><b>Setting Up An OpenGL Window</b></font></a>
+<br>
+<br>
+</p>
+
+<p class="textword">Добро пожаловать в мои уроки по <span lang="EN-US">OpenGL</span>.
+Я обычный программист, который любит <span lang="EN-US">OpenGL</span>. Первый раз
+я услышал об <span lang="EN-US">OpenGL</span>, когда 3<span lang="EN-US">DFx</span><span lang="EN-US"> </span>выпустила драйвера для <span lang="EN-US">OpenGL</span><span lang="EN-US"> </span>для видеокарты <span lang="EN-US">Voodoo</span> 1. Тут же я
+понял, что <span lang="EN-US">OpenGL</span><span lang="EN-US"> </span>это то, чему
+я должен научиться. В это время было довольно сложно найти нужную информацию по
+<span lang="EN-US">OpenGL</span><span lang="EN-US"> </span>в книгах или Интернет. Я
+потратил много времени, чтобы сделать рабочий код и часто спрашивал про <span lang="EN-US">OpenGL</span><span lang="EN-US"> </span>по электронной почте или на
+каналах <span lang="EN-US">IRC</span>. Я увидел, что те люди, которые знали <span lang="EN-US">OpenGL</span>, считали себя элитой, и не хотели делиться своими
+знаниями. Что очень неприятно!</p>
+
+<p class="textword"><span lang="EN-US">&nbsp;</span></p>
+
+<p class="textword">Этот сайт был создан для того, чтобы помочь людям, которые
+интересуются OpenGL. В других уроках я попытаюсь объяснить в деталях, на
+сколько это будет возможно, что делают отдельные строки кода. Я попытаюсь
+сделать код как можно проще (не используя MFC)! Так, чтобы даже абсолютный
+новичок в Visual C ++ и OpenGL был способен, прочитав код, понять то, что
+происходит. Этот сайт всего лишь один из многих предлагающих материал для
+изучения по OpenGL. Если Вы опытный программист OpenGL, то сайт может
+показаться слишком простым. Но если Вы только начинаете, я надеюсь, что этот
+сайт многое может Вам предложить! </p>
+
+<p class="textword"><span lang="EN-US">&nbsp;</span></p>
+
+<p class="textword">Этот урок был полностью переписан в январе 2000. Это пособие
+научит Вас, как создавать окна OpenGL. Окна могут быть в полноэкранном и в
+стандартном режимах, любых размеров, разрешения и глубины цвета. Код очень
+гибок, и может использоваться для любых проектов с OpenGL. Все последующие
+уроки будут базироваться на этом коде. Написанный код будет лаконичен, гибок. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">
+Я начинаю этот урок непосредственного с кода, который разбит на секции, каждая
+из которых будет подробно комментироваться. Первое, что Вы должны сделать - это
+создать проект в Visual C++. Если это для Вас затруднительно, то Вам стоит для
+начала изучить C++, а уже затем переходить на OpenGL. При написании был
+использован компилятор M<span lang="EN-US">icroSoft</span> Visual Studio 2005.
+Некоторые версии VC++ требуют замены bool на BOOL, true на TRUE и false на
+FALSE. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">
+После создания нового Win32 приложения (НЕ КОНСОЛЬНОГО) в Visual C++, Вам надо
+будет добавить для сборки проекта библиотеки OpenGL. В меню Project/setting,
+выберите закладку LINK. В строке "Object/Library Modules" добавьте
+"OpenGL32.lib GLu32.lib GLaux.lib". Затем нажмите OK. Теперь все
+готово для создания программы на OpenGL. </p>
+
+<p class="textword"><span lang="EN-US">&nbsp;</span></p>
+
+<p class="textword"><b>Примечание #1:</b> Во многих компиляторах константа
+CDS_FULLSCREEN - не определенна. Если получено сообщение об ошибке связанное с
+CDS_FULLSCREEN, то Вы должны добавить следующую строчку в начале кода Вашей
+программы: #define CDS_FULLSCREEN 4. </p>
+
+<p class="textword"><span lang="EN-US">&nbsp;</span></p>
+
+<p class="textword"><b>Примечание #2:</b> Когда писался первый урок, библиотека
+GLAUX была такой, какой ей и следовало оставаться. Со временем её перестали
+поддерживать. До сих пор во многих уроках на этом сайте используется как раз
+прежний вариант библиотеки. Если Ваш компилятор не поддерживает GLAUX или Вы не
+желаете ее использовать, скачайте GLAUX REPLACEMENT CODE отсюда. </p>
+
+<p class="textword"><span lang="EN-US">&nbsp;</span></p>
+
+<p class="textword">Первые четыре строки - заголовочные файлы, включаемые для
+последующего использования дополнительных библиотек. Они должны выглядят так:</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp; &nbsp;&nbsp;#include 
+&lt;windows.h&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ //
+Заголовочные файлы для Windows</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp; #include 
+&lt;gl\gl.h&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ //
+Заголовочные файлы для библиотеки OpenGL32</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp; #include 
+&lt;gl\glu.h&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ //
+Заголовочные файлы для библиотеки GLu32</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp; #include 
+&lt;gl\glaux.h&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ //
+Заголовочные файлы для библиотеки GLaux</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Следующее, что Вы должны сделать - это инициализировать все
+переменные, которые планируется использовать в нашей программе. Эта программа
+будет создавать пустое OpenGL окно, нет необходимости инициализировать большое
+количество переменных. Однако те, что мы устанавливаем - очень важны, и будут
+использоваться в каждой программе OpenGL, которую Вы напишите с использованием
+этого кода. </p>
+
+<p class="textword"><span lang="EN-US">&nbsp;</span></p>
+
+<p class="textword">Первые строки устанавливают Контекст Рендеринга (Rendering Context).
+Каждая OpenGL программа связывается с Контекстом Рендеринга, который в свою
+очередь вызывает Контекст Устройства (Device Context). Контекст Рендеринга
+OpenGL определен как hRC. Для того чтобы рисовать в окне, Вам необходимо
+создать Контекст Устройства Windows, который определен как hDC. DC соединяет
+окно с GDI (Graphics Device Interface). RC соединяет OpenGL с DC. </p>
+
+<p class="textword"><span lang="EN-US">&nbsp;</span></p>
+
+<p class="textword">В третьей строке инициализирована переменная hWnd, которая
+хранит дескриптор (уникальную ссылку-идентификатор) окна и, наконец, в четвёртой
+строке объявляется дескриптор приложения (экземпляр) нашей программы.</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp; HGLRC&nbsp; 
+hRC=NULL;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Постоянный контекст
+рендеринга</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp; HDC&nbsp; 
+hDC=NULL;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Приватный контекст
+устройства GDI</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp; HWND&nbsp; 
+hWnd=NULL;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Здесь будет хранится
+дескриптор окна</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp; HINSTANCE&nbsp; 
+hInstance;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Здесь будет
+хранится дескриптор приложения</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">В первой строке, приведённой ниже, инициализируем массив,
+который мы используем для отслеживания нажатия клавиш на клавиатуре. Есть много
+способов следить за нажатиями на клавиатуре, но я использую именно этот. </p>
+
+<p class="textword"><span lang="EN-US">&nbsp;</span></p>
+
+<p class="textword">Следующая переменная будет нужна для того, чтобы приложение знало,
+будет ли наше окно минимизировано в панель задач или нет. Если окно
+минимизировано мы можем заморозить выполнение программы и выйти из нее. Я люблю
+приостанавливать программы. Таким образом, программа не будет выполняться, если
+она минимизирована. </p>
+
+<p class="textword"><span lang="EN-US">&nbsp;</span></p>
+
+<p class="textword">Смысл переменной fullscreen вполне очевиден. Если наша
+программа запущена в полноэкранном режиме, fullscreen имеет значение true, если
+же она запущенна в оконном режиме, то fullscreen будет false. Очень важно
+сделать эти переменные глобальными, так чтобы все другие функции знали -
+приложение запущенно в полноэкранном режиме или нет.</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp; bool&nbsp; 
+keys[256];&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ &nbsp;// Массив,
+используемый для операций с клавиатурой</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp; bool&nbsp; 
+active=true;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Флаг активности
+окна, установленный в true по умолчанию</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp; bool&nbsp; 
+fullscreen=true;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Флаг режима
+окна, установленный в полноэкранный по умолчанию</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Теперь мы должны описать прототип функции WndProc(). Причиной,
+по которой мы должны сделать это, является то, что функция CreateGLWindow()
+вызывает функцию WndProc(), но WndProc() описывается после CreateGLWindow(). А
+в языке C (как и в C++), для вызова функции необходимо ее определить или
+описать прототип этой функции. Именно так, мы и поступаем в следующей строке. И
+теперь CreateGLWindow() может вызывать WndProc().</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp; <span lang="EN-US">LRESULT</span>&nbsp; <span lang="EN-US">CALLBACK</span><span lang="EN-US"> </span><span lang="EN-US">WndProc</span>( <span lang="EN-US">HWND</span>,
+<span lang="EN-US">UINT</span>, <span lang="EN-US">WPARAM</span>, <span lang="EN-US">LPARAM</span>
+);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Прототип функции <span lang="EN-US">WndProc</span></p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Назначение следующей секции кода заключается в изменении
+размеров OpenGL сцены всякий раз, когда будут изменены размеры окна (при
+условии, что Вы использует оконный, а не полноэкранный режим). Даже если Вы не
+способны изменить размеры окна (например, Вы находитесь в полноэкранном
+режиме), эту операцию придётся вызывать, по крайней мере, однажды, когда
+программе будет передано управление, чтобы настроить нашу сцену. Размеры сцены OpenGL
+будут изменены в соответствии с шириной и высотой окна, в которое выводится
+изображение.</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span lang="EN-US">GLvoid</span><span lang="EN-US"> </span><span lang="EN-US">ReSizeGLScene</span>( <span lang="EN-US">GLsizei</span><span lang="EN-US"> </span><span lang="EN-US">width</span>, <span lang="EN-US">GLsizei</span><span lang="EN-US"> </span><span lang="EN-US">height</span> )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Изменить размер и
+инициализировать окно <span lang="EN-US">GL</span> </p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 
+&nbsp;&nbsp;&nbsp; if( height == 0 
+)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+//
+ Предотвращение деления на ноль </p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; {</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; height = 1;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp; </p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ &nbsp;&nbsp;glViewport( 0, 0, width, height 
+);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// Сброс текущей области вывода </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Следующие строчки настраивают экран для 
+перспективного вида.
+Предметы с увеличением расстояния становятся меньше. Это придаёт 
+реалистичность
+сцене. Охват перспективы - 45 градусов, угол поворота оси рассчитывается
+ на
+основе ширины и высоты окна. Значения 0.1f, 100.0f - отправная и 
+конечная точки для того, чтобы определить какая будет глубина у экрана. </p>
+
+<p class="textword"><span lang="EN-US">&nbsp;</span></p>
+
+<p class="textword">glMatrixMode(GL_PROJECTION) сообщает о том, что следующие две
+команды будут воздействовать на матрицу проекции. Матрица проекции отвечает за
+добавление в нашу сцену перспективного вида. glLoadIdentity() – это функция
+работает подобно сбросу. Она восстанавливает выбранную матрицу в первоначальное
+состояние. Раз матрица проекции сброшена, необходимо вычислить перспективу для
+сцены. После вызова glLoadIdentity() мы инициализируем перспективный вид нашей
+сцены. glMatrixMode(GL_MODELVIEW) сообщает, что любые новые трансформации будут
+воздействовать на матрицу вида модели. Матрица вида модели - то
+"место", где сохранена информация о наших объектах. Позже мы
+сбрасываем матрицу вида модели. Не волнуйтесь, если что-то из выше изложенного
+Вы не понимаете, я буду обучать всему этому в дальнейших уроках. Только
+запомните, что НАДО сделать, если Вы хотите получить красивую перспективную
+сцену.</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; glMatrixMode( GL_PROJECTION );&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Выбор
+матрицы проекций</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; 
+glLoadIdentity();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Сброс матрицы
+проекции</p>
+
+<p class="textpreword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; // Вычисление соотношения геометрических размеров для
+окна</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; <span lang="EN-US">gluPerspective( 45.0f,
+(GLfloat)width/(GLfloat)height, 0.1f, 100.0f );</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; glMatrixMode( GL_MODELVIEW );&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span>Выбор матрицы вида модели</p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; </span>glLoadIdentity();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// Сброс матрицы вида модели</p>
+
+<p class="textpreword">&nbsp; }</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">В следующей секции кода будут произведены все настройки для
+OpenGL. Мы установим цвет для очистки экрана, включим глубину буфера, разрешим
+плавное сглаживание цветов, и другое. Эта функция не должна быть вызвана до тех
+пор, пока OpenGL окно не будет создано. Эта функция возвращает значение и поскольку
+наша инициализация не сложна, мы не будем волноваться об этом значении сейчас. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;int InitGL( 
+GLvoid 
+)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Все
+установки касаемо OpenGL происходят здесь</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;{</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">В следующей строке разрешается сглаживание с плавным цветовым
+переходам. Плавное цветовое сглаживание смешивает цвета вдоль всего полигона и учитывает
+освещение. Подробнее я объясню это в другом уроке.</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; glShadeModel( GL_SMOOTH );&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Разрешить
+плавное цветовое сглаживание</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Следующая строка устанавливает цвет, которым будет 
+очищен
+экран. Для тех, кто не знает, как устроены цвета, я постараюсь кратко
+объяснять. Все значения могут быть в диапазоне от 0.0f до 1.0f, при этом
+ 0.0 самый темный, а 1.0 самый светлый. Первый аргумент в glClearColor -
+ это
+интенсивность Красного (Red), второй – Зеленного (Green), третий – 
+Синего
+(Blue). Наибольшее значение – 1.0f, является самым ярким значением 
+данного
+цвета. Последнее число - для Альфа (Прозрачность) значения. Когда 
+начинается
+очистка экрана, я никогда не волнуюсь о четвертом числе. Пока оно будет 
+0.0f.
+Как его использовать, я объясню в другом уроке. </p>
+
+<p class="textword"><span lang="EN-US">&nbsp;</span></p>
+
+<p class="textword">Вы можете получить различные цвета, смешивая три 
+компоненты цвета.
+Поэтому, если Вы вызвали glClearColor(0.0f,0.0f,1.0f,0.0f) Вы 
+произведете
+очистку экрана, с последующим закрашиванием его в ярко-синий цвет. Если 
+Вы
+вызвали glClearColor(0.5f,0.0f,0.0f,0.0f) экран будет заполнен умеренно 
+красным
+цветом. Не очень ярким (1.0f) и не темным (0.0f), а именно умеренно 
+красным. Для того чтобы сделать белый фон, Вы должны установить все 
+цвета в (1.0f). Черный - все компоненты цвета равны 0.0f.</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; glClearColor(0.0f, 0.0f, 0.0f,
+ 0.0f);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Очистка
+ экрана в черный цвет</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Следующие три строки создают Буфер Глубины. Думайте о буфере
+глубины как о слоях на экране. Буфер глубины указывает, как далеко объекты
+находятся от экрана. Мы не будем реально использовать буфер глубины в этой
+программе, но любая программа с OpenGL, которая рисует на экране в 3D, будет
+его использовать. Он позволяет сортировать объекты для отрисовки, поэтому квадрат,
+расположенный под кругом не будет изображен поверх него. Буфер глубины очень
+важная часть OpenGL. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; glClearDepth( 1.0f 
+);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Разрешить очистку буфера глубины</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; glEnable( GL_DEPTH_TEST 
+);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 
+Разрешить тест
+глубины</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; glDepthFunc( GL_LEQUAL );&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Тип теста
+глубины</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Следом указываем OpenGL, что мы хотим сделать перспективу
+лучше. Это достигается выполнением простой операции, но перспектива от этого
+становится немного лучше. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// Улучшение в вычислении перспективы</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">И, в конце концов, мы возвращаем true. Если мы хотим узнать,
+прошла ли инициализация как положено, мы должны проверить возвращаемое значение
+на true и false. Вы можете добавить код, который будет возвращать FALS<span lang="EN-US">E</span>, если произошла какая-нибудь ошибка. Но сейчас это не
+должно Вас беспокоить. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; return 
+true;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Инициализация прошла
+успешно</p>
+
+<p class="textpreword">&nbsp; }</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">В следующей секции содержится весь код для рисования. Все,
+что Вы планируете для отрисовки на экране, будет содержатся в этой секции кода.
+В каждом уроке код будет добавляться в эту секцию программы. Если Вы уже
+понимаете OpenGL, Вы можете попробовать добавить в код простейшие формы на
+OpenGL, ниже вызова glLoadIdentity() и перед возвращением значения (return
+true). Если Вы новичок в OpenGL, подождите до следующего моего урока. Сейчас
+все что мы сделаем, это очистка экрана цветом, который мы определили выше,
+очистка буфера глубины и сброс сцены. </p>
+
+<p class="textword"><span lang="EN-US">&nbsp;</span></p>
+
+<p class="textword">Возвращение значения true говорит нашей программе о том, что
+в этой секции не возникло никаких проблем. Если, по каким-либо причинам, Вы
+хотите остановить выполнение программы добавьте строчку return false,
+где-нибудь перед return true, таким образом мы сообщим программе, что в секции
+кода, выполняющего рисование, произошла какая-то ошибка. Тогда произойдёт выход
+из программы.</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; int DrawGLScene( GLvoid 
+)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Здесь
+будет происходить вся прорисовка</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; {</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;glClear( GL_COLOR_BUFFER_BIT |
+GL_DEPTH_BUFFER_BIT );&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;// Очистить экран и буфер глубины</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+&nbsp;&nbsp;glLoadIdentity();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Сбросить текущую
+матрицу</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+&nbsp;&nbsp;return 
+true;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Прорисовка прошла
+успешно</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; }</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Следующая секция кода вызывается только перед выходом из
+программы. Задача KillGLWindow() - освободить Контекст Рендеринга (hRC),
+Контекст Устройства (hDC) и, наконец, дескриптор окна (hWnd). Я добавил много
+проверок на наличие ошибок. Если программа неспособна удалить какую-нибудь
+часть из контекстов окна, появится окно (Message Box) с соответствующим
+сообщением об ошибке. Чем их больше будет создано (Message Box-ов), тем проще
+будет найти ошибку. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp; <span lang="EN-US">GLvoid</span><span lang="EN-US"> </span><span lang="EN-US">KillGLWindow</span>( <span lang="EN-US">GLvoid</span> )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Корректное разрушение окна</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Первое, что мы должны сделать в этой функции - проверить,
+находимся ли мы в полноэкранном режиме. Если это так, то переключаемся назад на
+рабочий стол. Мы должны уничтожить окно предварительно выйдя из полноэкранного
+режима, на некоторых видеокартах, если мы уничтожаем полноэкранный режим,
+рабочий стол - искажается. Именно поэтому разрушение полноэкранного режима
+будет производится в первую очередь </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; if( fullscreen 
+)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Мы в полноэкранном
+режиме?</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; &nbsp;{</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Мы используем ChangeDisplaySettings(NULL,0) для возврата
+нашего рабочего стола в первоначальное состояние. Передача NULL в первом
+параметре и 0 во втором принуждает окно использовать параметры, хранящиеся в
+регистре окна (устанавливая разрешение, битовую глубину, частоту обновления
+экрана и другое по умолчанию), действительно восстанавливая первоначальное
+состояние рабочего стола. После переключения обратно к оконному режиму мы
+должны сделать курсор видимым. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ChangeDisplaySettings(
+ NULL, 0 );&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Если да, то переключаемся обратно в оконный режим</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ &nbsp;&nbsp;&nbsp;&nbsp;ShowCursor( true 
+);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 
+Показать
+курсор мышки</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; &nbsp;}</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Код приведённый ниже проверяет, существует ли Контекст
+Рендеринга (hRC). Если его нет, то программа переходит на секцию кода,
+расположенную ниже и проверяющие существует ли Контекст Устройства (hDC). </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ &nbsp;&nbsp;if( hRC 
+)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Существует ли
+Контекст Рендеринга?</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;{</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Если он существует, код ниже проверит, возможно ли освободить
+его (отсоединить RC от DC). С помощью сообщений можно отследить ошибки. Мы
+просим программу освободить Контекст Рендеринга (с помощью вызова
+wglMakeCurrent(NULL,NULL)), затем проверяем, благополучно ли завершена эта
+операция или нет. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if( !wglMakeCurrent( NULL, NULL ) )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Возможно ли освободить RC и DC?</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;{</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Если невозможно уничтожить контексты RC и DC, выскочит
+сообщение об ошибке, это позволит понять, что контексты не уничтожены. NULL в
+функции MessageBox() означает, что у сообщения не будет родительского окна.
+Текст справа от NULL - текст, который будет содержать сообщение. "SHUTDOWN
+ERROR" - текст, который будет содержаться в заголовке окна-сообщения.
+Следом мы видим MB_OK, это означает, что окно-сообщение будет с одной кнопкой
+помеченной "ОК". MB_ICONINFORMATION создаёт иконку в области
+окна-сообщения (что заставляет обратить на себя внимание). </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span lang="EN-US">MessageBox( NULL,
+"Release Of DC And RC Failed.", "SHUTDOWN ERROR", MB_OK |
+MB_ICONINFORMATION );</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span>}</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Потом мы пытаемся удалить Контекст Рендеринга. Если это не
+возможно выскочит соответствующее сообщение. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if( !wglDeleteContext( hRC ) )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Возможно ли
+удалить RC?</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;{</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Если невозможно удалить Контекст Рендеринга код, приведённый
+ниже, выведет окно-сообщение позволяющее понять, что его удаление - невозможно.
+hRC будет установлено в NULL.</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<span lang="EN-US">MessageBox( NULL, "Release
+Rendering Context Failed.", "SHUTDOWN ERROR", MB_OK |
+MB_ICONINFORMATION );</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span>}</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hRC = 
+NULL;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Установить RC в NULL</p>
+
+<p class="textpreword">&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Теперь мы проверим, имеет ли программа Контекст Устройства, и
+если это так, то мы попробуем его уничтожить. Если это невозможно
+окно-сообщение выведет соответствующее сообщение и hDC будет установлен в NULL.
+</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; if( hDC &amp;&amp; !ReleaseDC( hWnd, hDC ) )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Возможно ли уничтожить DC?</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; &nbsp;<span lang="EN-US">{</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;MessageBox( NULL, "Release
+Device Context Failed.", "SHUTDOWN ERROR", MB_OK |
+MB_ICONINFORMATION );</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;</span>hDC=NULL;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Установить DC в NULL</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; &nbsp;}</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Теперь проверим, есть ли дескриптор окна, а если есть, мы
+попробуем уничтожить окно, используя DestroyWindow(hWnd). Если это невозможно
+окно-сообщение выведет соответствующее сообщение и hWnd будет установлен в
+NULL. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; if(hWnd &amp;&amp; !DestroyWindow(hWnd))&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Возможно ли уничтожить окно?</p>
+
+<p class="textpreword">&nbsp; <span lang="EN-US">{</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; MessageBox( NULL, "Could Not
+Release hWnd.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION );</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; </span>hWnd = NULL;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Установить hWnd в NULL</p>
+
+<p class="textpreword">&nbsp; }</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Последнее, что нам необходимо сделать так это
+разрегистрировать (операция, обратная регистрации) класс окна. Это позволяет
+нам корректным образом уничтожить окно и открыть другое без получения сообщения
+об ошибке "Windows Class already registered" (Класс окна уже
+зарегистрирован). </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; if( !UnregisterClass( "OpenGL", hInstance ) )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// Возможно ли разрегистрировать класс</p>
+
+<p class="textpreword">&nbsp; <span lang="EN-US">{</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; MessageBox( NULL, "Could Not
+Unregister Class.", "SHUTDOWN ERROR", MB_OK |
+MB_ICONINFORMATION);</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; hInstance =
+ 
+NULL;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // </span>Установить<span lang="EN-US"> hInstance </span>в<span lang="EN-US"> NULL</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp; </span>}</p>
+
+<p class="textpreword">}</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Следующая секция кода создаёт наше OpenGL окно. Я провёл
+много времени, пытаясь решить, создавать ли полноэкранное приложение, что
+требует немного кода. Или же позволить, выбирать удобный для пользователя режим
+окна, что потребует больше кода. Я решил, что удобный для пользователя режим
+окна с большим количеством кода лучший выбор. Я всё время получал такие вопросы
+по электронной почте, как: "Как я могу создать окно, вместо того, чтобы
+использовать полноэкранный режим?", "Как можно изменить заголовок
+окна?", "Как можно изменить разрешение экрана или формат пикселей
+окна?". Следующий далее код решает все эти вопросы. Поэтому лучше понять
+этот материал, и тогда написание программ на OpenGL покажется гораздо легче! </p>
+
+<p class="textword"><span lang="EN-US">&nbsp;</span></p>
+
+<p class="textword">Как Вы можете видеть, функция возвращает BOOL (true или false),
+всего она получает 5 аргументов: Заголовок Окна, Ширину Окна, Высоту Окна, Число
+Битов (16/24/32), и, наконец, флаг режима (true для полноэкранного или false
+для оконного). Мы возвращаем логическую переменную, которая говорит о том,
+возможно ли создать окно. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword"><span lang="EN-US">BOOL CreateGLWindow( LPCWSTR title, int
+width, int height, int bits, bool fullscreenflag )</span></p>
+
+<p class="textpreword">{</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Когда мы просим Windows найти формат пикселей,
+соответствующий тому, который мы хотим, номер режима, который нашёл Windows,
+будет храниться в переменной PixelFormat. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; GLuint&nbsp;&nbsp;&nbsp; 
+PixelFormat;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Хранит результат
+после поиска</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Переменная wc будет использоваться для хранения структуры
+класса нашего окна. Структура класса содержит информацию о нашем окне. Изменяя
+различные поля класса, мы можем изменить вид окна и его поведение. Каждому окну
+соответствует определённый класс. Перед созданием окна Вы должны
+ЗАРЕГИСТРИРОВАТЬ класс для окна. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; WNDCLASS&nbsp; 
+wc;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Структура класса окна</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">dwExStyle и dwStyle будут хранить расширенную и обычную
+информацию о стиле окна. Я использую переменные для хранения стилей так, чтобы
+я мог изменять стили в зависимости от того, какого типа окно я хочу создать (всплывающее
+окно для полноэкранного режима или с рамкой для оконного режима). </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; DWORD&nbsp;&nbsp;&nbsp; 
+dwExStyle;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Расширенный стиль
+окна</p>
+
+<p class="textpreword">&nbsp; DWORD&nbsp;&nbsp;&nbsp; 
+dwStyle;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Обычный стиль окна</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Следующие пять строчек кода устанавливают значения координат
+левого верхнего и правого нижнего угла прямоугольника (окна). Мы будем
+использовать эти значения для выравнивания нашего окна так, чтобы область, в
+которой мы рисуем, имела такое разрешение, какое мы хотим. Обычно, если мы
+создаём окно 1024х768, границы окна занимают некоторую часть нашего разрешения.
+</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; <span lang="EN-US">RECT WindowRect;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Grabs Rectangle Upper Left / Lower Right Values</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp; </span>WindowRect.left=(long)0;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// Установить левую составляющую в 0</p>
+
+<p class="textpreword">&nbsp; WindowRect.right=(long)width;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Установить
+правую составляющую в Width</p>
+
+<p class="textpreword">&nbsp; 
+WindowRect.top=(long)0;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Установить
+верхнюю составляющую в 0</p>
+
+<p class="textpreword">&nbsp; <span lang="EN-US">WindowRect.bottom=(long)height;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span>Установить нижнюю составляющую в Height</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">В следующей строчке кода мы присваиваем глобальной переменной
+fullscreen значение переменной fullscreenflag. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; fullscreen=fullscreenflag;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Устанавливаем
+значение глобальной переменной fullscreen</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">В следующей секции кода мы считаем дескриптор нашего
+приложения, затем задекларируем класс нашего окна. </p>
+
+<p class="textword"><span lang="EN-US">&nbsp;</span></p>
+
+<p class="textword">Стили CS_HREDRAW и CS_VREDRAW принуждают перерисовать окно
+всякий раз, когда оно перемещается. CS_OWNDC создает скрытый DC для окна. Это
+означает, что DC не используется совместно несколькими приложениями. WndProc -
+процедура, которая перехватывает сообщения для программы. Дополнительной
+информации для нашего окна нет, поэтому заполняем два этих (cbClsExtra и
+cbWndExtra) поля нулями. Затем мы устанавливаем дескриптор приложения. hIcon установлен
+равным нулю, это означает, что мы не хотим ICON в окне, и для мыши используем
+стандартный указатель. Фоновый цвет не имеет значения (мы установим его в GL).
+Мы не хотим меню в этом окне, поэтому мы используем установку его в NULL, и имя
+класса – это любое имя которое Вы хотите. Для простоты я использую
+"OpenGL".</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; hInstance&nbsp;&nbsp;&nbsp; = GetModuleHandle(NULL);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Считаем
+дескриптор нашего приложения</p>
+
+<p class="textpreword">&nbsp; wc.style&nbsp;&nbsp;&nbsp; = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Перерисуем при перемещении и создаём скрытый DC</p>
+
+<p class="textpreword">&nbsp; wc.lpfnWndProc&nbsp;&nbsp;&nbsp; = (WNDPROC) WndProc;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Процедура обработки сообщений</p>
+
+<p class="textpreword">&nbsp; wc.cbClsExtra&nbsp;&nbsp;&nbsp; = 
+0;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Нет дополнительной
+информации для окна</p>
+
+<p class="textpreword">&nbsp; wc.cbWndExtra&nbsp;&nbsp;&nbsp; = 
+0;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Нет дополнительной
+информации для окна</p>
+
+<p class="textpreword">&nbsp; wc.hInstance&nbsp;&nbsp;&nbsp; = 
+hInstance;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Устанавливаем
+дескриптор</p>
+
+<p class="textpreword">&nbsp; wc.hIcon&nbsp;&nbsp;&nbsp; = LoadIcon(NULL, IDI_WINLOGO);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Загружаем иконку по умолчанию</p>
+
+<p class="textpreword">&nbsp; wc.hCursor&nbsp;&nbsp;&nbsp; = LoadCursor(NULL, IDC_ARROW);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Загружаем указатель мышки</p>
+
+<p class="textpreword">&nbsp; wc.hbrBackground&nbsp; = NULL;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Фон не
+требуется для GL</p>
+
+<p class="textpreword">&nbsp; wc.lpszMenuName&nbsp;&nbsp;&nbsp; = 
+NULL;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Меню в окне
+не будет</p>
+
+<p class="textpreword">&nbsp; wc.lpszClassName&nbsp; = "OpenGL";&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Устанавливаем имя классу</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Теперь надо зарегистрировать класс. Если возникнет какая-либо
+проблема или ошибка, выскочит соответствующее окно-сообщение. Кликнув
+"ОК" в нём мы выйдем из программы.</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; if( !RegisterClass( &amp;wc ) )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Пытаемся
+зарегистрировать класс окна</p>
+
+<p class="textpreword">&nbsp; <span lang="EN-US">{</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; MessageBox( NULL, "Failed To
+Register The Window Class.", "ERROR", MB_OK | MB_ICONEXCLAMATION
+);</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; </span>return false;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Выход и возвращение функцией значения false</p>
+
+<p class="textpreword">&nbsp; }</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Теперь проверим, желаем ли мы запустить программу в
+полноэкранном режиме или в оконном режиме. Если выбран полноэкранный режим, мы
+пробуем установить его. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; if( fullscreen 
+)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Полноэкранный режим?</p>
+
+<p class="textpreword">&nbsp; {</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Следующая секция кода вызывает у многих людей массу проблем …
+переход в полноэкранный режим. Существует несколько важных моментов, какие Вы
+должны запомнить, когда переключаетесь в полноэкранный режим. Убедитесь, что
+ширина и высота, которые Вы используете в полноэкранном режиме те же самые, что
+и ширина и высота, которую Вы планировали создать в Вашем окне, и, что тоже
+очень важно, установка полноэкранного режима должна происходить ПЕРЕД созданием
+окна. В этом коде Вы не должны беспокоиться о ширине и высоте, они будут установлены
+в другом месте. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; DEVMODE dmScreenSettings;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Режим
+устройства</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; memset( &amp;dmScreenSettings, 0, sizeof( dmScreenSettings
+) );&nbsp;&nbsp;&nbsp; // Очистка для хранения установок</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; <span lang="EN-US">dmScreenSettings.dmSize=sizeof(
+dmScreenSettings );&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // </span>Размер структуры<span lang="EN-US"> Devmode</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; dmScreenSettings.dmPelsWidth&nbsp; =&nbsp;&nbsp;
+width;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // </span>Ширина экрана</p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; dmScreenSettings.dmPelsHeight&nbsp; =&nbsp;&nbsp;
+height;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// </span>Высота экрана</p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; dmScreenSettings.dmBitsPerPel&nbsp; =&nbsp;&nbsp;
+bits;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // </span>Глубина цвета</p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; dmScreenSettings.dmFields=
+DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;// </span>Режим Пикселя</p>
+
+<p class="textword"><span lang="EN-US">&nbsp;</span></p>
+
+<p class="textword">В коде, приведённом выше, мы очищаем память для хранения наших
+видео настроек. Мы устанавливаем ширину, высоту и глубину цвета, которые мы
+хотим иметь. В коде ниже мы пытаемся подать запрос на установление
+полноэкранного режима. Вся информация о ширине, высоте и глубине цвета хранится
+в dmScreenSettings. В строчке ниже функция ChangeDisplaySettings пробует
+переключить экран в режим, настройки которого хранятся в dmScreenSettings. Я
+использую параметр CDS_FULLSCREEN, когда переключаю режим потому, что он позволяет
+скрыть панель управления Windows (в том числе кнопку "Пуск") внизу
+экрана, к тому же это позволяет нам избежать перемещения и изменения размеров
+рабочего стола, когда мы переключаемся в полноэкранный режим и обратно. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; // Пытаемся установить выбранный режим и получить
+результат.&nbsp; Примечание<span lang="EN-US">: CDS_FULLSCREEN </span>убирает панель управления<span lang="EN-US">.</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; if( ChangeDisplaySettings(
+&amp;dmScreenSettings, CDS_FULLSCREEN ) != </span>DISP_CHANGE_SUCCESSFUL )</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; {</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Если режим не установлен будет задействован следующий код.
+Если соответствующий полноэкранный режим не существует, выскочит окно-сообщение
+предлагающее два варианта... запустить приложение в оконном режиме или выйти. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Если переключение в полноэкранный режим
+невозможно, будет предложено два варианта: оконный режим или выход.</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span lang="EN-US">if( MessageBox( NULL, "The
+Requested Fullscreen Mode Is Not Supported By\nYour Video Card. Use Windowed
+Mode Instead?", </span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "NeHe GL", MB_YESNO |
+MB_ICONEXCLAMATION) == IDYES )</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>{</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Если пользователь решил, использовать оконный режим -
+переменной fullscreen присвоится значение false и выполнение программы
+продолжится. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span lang="EN-US">fullscreen = false;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // </span>Выбор
+оконного режима<span lang="EN-US"> (fullscreen = false)</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; else</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Если пользователь решил выйти из приложения выскочит окно с
+сообщением о закрытие программы. Функция вернёт false, что сообщит нашей
+программе, что создание окна не завершилось успехом. Затем мы выйдем. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Выскакивающее окно, сообщающее пользователю о
+закрытие окна.</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span lang="EN-US">MessageBox( NULL, "Program Will
+Now Close.", "ERROR", MB_OK | MB_ICONSTOP );</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>return false;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Выход и возвращение функцией false</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; }</p>
+
+<p class="textpreword">&nbsp; }</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Поскольку код выше мог вызвать ошибку инициализации
+полноэкранного режима, и пользователь мог решить запускать программу всё же в
+оконном режиме, мы проверяем ещё раз значение переменной fullscreen (true или
+false) перед тем, как мы установим режим экрана/окна. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; 
+if(fullscreen)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Мы остались в
+полноэкранном режиме?</p>
+
+<p class="textpreword">&nbsp; {</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Если мы остались в полноэкранном режиме мы установим
+расширенный стиль в WS_EX_APPWINDOW, который скроет верхнюю часть окна вместе с
+заголовком, как только наше окно станет видимым. Для обычного стиля зададим
+параметр WS_POPUP. Этот стиль не имеет границы вокруг окна, делая его
+подходящим для полноэкранного режима. </p>
+
+<p class="textword"><span lang="EN-US">&nbsp;</span></p>
+
+<p class="textword">И, наконец, мы запретим использования указателя мышки. Если
+программа не является интерактивной, правилом хорошего тона является сокрытия
+указателя мышки в полноэкранном режиме. Но это решать Вам.</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; dwExStyle&nbsp; =&nbsp;&nbsp; WS_EX_APPWINDOW;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Расширенный стиль окна</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; dwStyle&nbsp;&nbsp;&nbsp; 
+=&nbsp;&nbsp; 
+WS_POPUP;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Обычный стиль
+окна</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; ShowCursor( false 
+);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Скрыть указатель
+мышки</p>
+
+<p class="textpreword">&nbsp; }</p>
+
+<p class="textpreword">&nbsp; else</p>
+
+<p class="textpreword">&nbsp; {</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Если мы используем оконный режим, вместо полноэкранного
+режима, мы добавим WS_EX_WINDOWEDGE в расширенный стиль. Это придаст окну более
+объёмный вид. Для обычного стиля зададим параметр WS_OVERLAPPEDWINDOW вместо
+WS_POPUP. WS_OVERLAPPEDWINDOW создаёт окно с заголовком, границы для
+регулировки размера, оконное меню и кнопки для сворачивания/разворачивания. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; dwExStyle&nbsp; =&nbsp;&nbsp; WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// Расширенный стиль окна</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; dwStyle&nbsp;&nbsp;&nbsp; 
+=&nbsp;&nbsp; 
+WS_OVERLAPPEDWINDOW;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 
+Обычный
+стиль окна</p>
+
+<p class="textpreword">&nbsp; }</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Строчка ниже регулирует наше окно в зависимости от того,
+какой стиль окна мы создаем. Настройка сделает наше окно таким, какие параметры
+ему были заданны. Обычно границы перекрывают часть нашего окна. Используя функцию
+AdjustWindowRectEx мы указываем, чтобы ни одна часть окна OpenGL не была
+перекрыта границами, вместо этого будут созданы дополнительные пиксели
+специально для рамки границ. На полноэкранный режим эта операция никак не
+повлияет. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; AdjustWindowRectEx( &amp;WindowRect, dwStyle, false,
+dwExStyle );&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Подбирает окну подходящие размеры</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">В следующей секции кода мы приступим к созданию нашего окна и
+проверке создано ли оно должным образом. Мы передаём CreateWindowEx() все
+параметры, в которых она нуждается: </p>
+
+<p class="textword"><span lang="EN-US">&nbsp;</span></p>
+
+<p class="textword" style="margin-left:36.0pt;text-indent:-18.0pt"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>определённый ранее расширенный стиль; </p>
+
+<p class="textword" style="margin-left:36.0pt;text-indent:-18.0pt"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>имя класса (которое должно быть тем самым, что Вы использовали,
+когда регистрировали класс окна); </p>
+
+<p class="textword" style="margin-left:36.0pt;text-indent:-18.0pt"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>заголовок окна; </p>
+
+<p class="textword" style="margin-left:36.0pt;text-indent:-18.0pt"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>обычный стиль окна; </p>
+
+<p class="textword" style="margin-left:36.0pt;text-indent:-18.0pt"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>X левого угла окна; </p>
+
+<p class="textword" style="margin-left:36.0pt;text-indent:-18.0pt"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>Y левого угла окна; </p>
+
+<p class="textword" style="margin-left:36.0pt;text-indent:-18.0pt"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>ширина окна; </p>
+
+<p class="textword" style="margin-left:36.0pt;text-indent:-18.0pt"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>высота окна; </p>
+
+<p class="textword" style="margin-left:36.0pt;text-indent:-18.0pt"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>родительское окно (у нас его нет); </p>
+
+<p class="textword" style="margin-left:36.0pt;text-indent:-18.0pt"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>дескриптор меню (и меню у нас тоже нет); </p>
+
+<p class="textword" style="margin-left:36.0pt;text-indent:-18.0pt"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>дескриптор приложения; </p>
+
+<p class="textword" style="margin-left:36.0pt;text-indent:-18.0pt"><span style="font-family:Symbol">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>дополнительные данные. </p>
+
+<p class="textword"><span lang="EN-US">&nbsp;</span></p>
+
+<p class="textword">Прошу обратить внимание: мы подключаем дополнительные стили
+WS_CLIPSIBLINGS и WS_CLIPCHILDREN вместе с теми стилями, которые мы уже решили
+использовать. WS_CLIPSIBLINGS и WS_CLIPCHILDREN требуются для работы OpenGL
+соответствующим образом. Эти стили не допускают другим окнам рисоваться поверх
+или внутри нашего OpenGL окна.</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; if( !( hWnd = CreateWindowEx(&nbsp; dwExStyle,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Расширенный стиль для окна</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ _T("OpenGL"),&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 
+Имя класса</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+title,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Заголовок окна</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ WS_CLIPSIBLINGS |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 
+Требуемый стиль для
+окна</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ WS_CLIPCHILDREN |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 
+Требуемый стиль для
+окна</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ dwStyle,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 
+Выбираемые стили для окна</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 0, 0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Позиция окна</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WindowRect.right-WindowRect.left,&nbsp;&nbsp;&nbsp; //
+Вычисление подходящей ширины</p>
+
+<p class="textpreword">&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WindowRect.bottom-WindowRect.top,&nbsp;&nbsp;&nbsp; //
+Вычисление подходящей высоты</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ NULL,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Нет родительского</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ NULL,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Нет меню</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ hInstance,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 
+Дескриптор приложения</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ NULL ) ) )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Не 
+передаём ничего до
+WM_CREATE (???)</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Теперь проверим, создано ли наше окно должным образом. Если
+наше окно было создано, hWnd будет хранить дескриптор окна. Если же окно не
+было создано - код ниже вызовет всплывающее сообщение об ошибке и программа
+завершится. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; <span lang="EN-US">{</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; KillGLWindow();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // </span>Восстановить
+экран</p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; MessageBox( NULL, "Window
+Creation Error.", "ERROR", MB_OK | MB_ICONEXCLAMATION );</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; </span>return false;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Вернуть false</p>
+
+<p class="textpreword">&nbsp; }</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Следующая секция кода описывает Формат Пикселей (Pixel
+Format). Мы выбираем формат, который поддерживает OpenGL и двойной буфер, в
+соответствии с RGBA (Red-красный, Green-зелёный, Blue-синий, Alpha
+Channel-альфа канал (канал прозрачности)). Мы пытаемся найти формат пикселя,
+который соответствует такому количеству бит, выделенных на глубину цвета, какое
+заранее будет заданно. И, наконец, мы установим 32 битный Z-буфер (буфер
+глубины). Остальные параметры или не используются, или не важны (кроме буфера
+трафарета и (медленного) буфера накопления). </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; static&nbsp; PIXELFORMATDESCRIPTOR pfd=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // pfd
+сообщает Windows каким будет вывод на экран каждого пикселя</p>
+
+<p class="textpreword">&nbsp; {</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; sizeof(PIXELFORMATDESCRIPTOR),&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Размер
+дескриптора данного формата пикселей</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; 
+1,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Номер версии</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; PFD_DRAW_TO_WINDOW 
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Формат для Окна</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; <span lang="EN-US">PFD_SUPPORT_OPENGL |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // </span>Формат
+для<span lang="EN-US"> OpenGL</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; </span>PFD_DOUBLEBUFFER,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// Формат для двойного буфера</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; 
+PFD_TYPE_RGBA,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Требуется RGBA формат</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; 
+bits,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Выбирается бит глубины цвета</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; 0, 0, 0, 0, 0, 
+0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Игнорирование
+цветовых битов</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; 
+0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Нет буфера прозрачности</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; 
+0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Сдвиговый бит игнорируется</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; 
+0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Нет буфера накопления</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; 0, 0, 0, 
+0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Биты накопления
+игнорируются</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; 
+32,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // 32 битный Z-буфер (буфер
+глубины)</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; 
+0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Нет буфера трафарета</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; 
+0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Нет вспомогательных буферов</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; 
+PFD_MAIN_PLANE,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ &nbsp;&nbsp;&nbsp;// Главный слой
+рисования</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; 
+0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Зарезервировано</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; 0, 0, 
+0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Маски слоя игнорируются</p>
+
+<p class="textpreword">&nbsp; };</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Если во время создания окна не возникло ни одной ошибки, мы
+попытаемся получить Контекст Устройства (DC) OpenGL. Если мы не можем получить
+DC, на экран выскочит сообщение об ошибке и программа завершит работу (функция
+возвратит false). </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; if( !( hDC = GetDC( hWnd ) ) )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Можем ли
+мы получить Контекст Устройства?</p>
+
+<p class="textpreword">&nbsp; <span lang="EN-US">{</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; KillGLWindow();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // </span>Восстановить
+экран</p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; MessageBox( NULL, "Can't Create
+A GL Device Context.", "ERROR", MB_OK | MB_ICONEXCLAMATION );</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; </span>return false;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Вернуть false</p>
+
+<p class="textpreword">&nbsp; }</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Если мы смогли получить Контекст Устройства для нашего OpenGL
+окна мы попробуем найти формат пикселя, который мы описали выше. Если Windows
+не может найти подходящий формат, на экран выскочит сообщение об ошибке и
+программа завершит работу (функция возвратит false). </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; if( !( PixelFormat = ChoosePixelFormat( hDC, &amp;pfd )
+) )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Найден ли подходящий формат пикселя?</p>
+
+<p class="textpreword">&nbsp; <span lang="EN-US">{</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; KillGLWindow();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // </span>Восстановить
+экран</p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; MessageBox( NULL, "Can't Find A
+Suitable PixelFormat.", "ERROR", MB_OK | MB_ICONEXCLAMATION );</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; </span>return false;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Вернуть false</p>
+
+<p class="textpreword">&nbsp; }</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Если Windows нашёл соответствующий формат, мы попытаемся
+установить его. Если же он не может быть установлен, на экран выскочит
+сообщение об ошибке и программа завершит работу (функция возвратит false). </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; if( !SetPixelFormat( hDC, PixelFormat, &amp;pfd ) )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// Возможно ли установить Формат Пикселя?</p>
+
+<p class="textpreword">&nbsp; <span lang="EN-US">{</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; KillGLWindow();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // </span>Восстановить
+экран</p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; MessageBox( NULL, "Can't Set The
+PixelFormat.", "ERROR", MB_OK | MB_ICONEXCLAMATION );</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; </span>return false;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Вернуть false</p>
+
+<p class="textpreword">&nbsp; }</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Если формат был корректно установлен, мы попытаемся получить
+Контекст Рендеринга. Если это не возможно, на экран выскочит сообщение об
+ошибке и программа завершит работу (функция возвратит false). </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; if( !( hRC = wglCreateContext( hDC ) ) )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Возможно ли установить Контекст Рендеринга?</p>
+
+<p class="textpreword">&nbsp; <span lang="EN-US">{</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; KillGLWindow();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // </span>Восстановить
+экран</p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; MessageBox( NULL, "Can't Create
+A GL Rendering Context.", "ERROR", MB_OK | MB_ICONEXCLAMATION);</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; </span>return false;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Вернуть false</p>
+
+<p class="textpreword">&nbsp; }</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Если у нас до сих пор не возникало ошибок, т. е. мы смогли
+создать и Контекст Устройства и Контекст Рендеринга, всё, что мы должны сделать
+теперь - сделать Контекст Рендеринга активным. Если у нас этого не получится,
+на экран выскочит сообщение об ошибке и программа завершит работу (функция
+возвратит false). </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; if( !wglMakeCurrent( hDC, hRC ) )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Попробовать активировать Контекст Рендеринга</p>
+
+<p class="textpreword">&nbsp; <span lang="EN-US">{</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; KillGLWindow();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // </span>Восстановить
+экран</p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; MessageBox( NULL, "Can't
+Activate The GL Rendering Context.", "ERROR", MB_OK |
+MB_ICONEXCLAMATION );</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; </span>return false;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Вернуть false</p>
+
+<p class="textpreword">&nbsp; }</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Если всё прошло гладко, и наше OpenGL окно было создано, мы
+покажем окно, установим его на передний план (присвоив более высокий приоритет)
+и затем установим фокус для этого окна. Потом мы вызовем ReSizeGLScene,
+передавая ширину и высоту экрана для настройки перспективы для нашего OpenGL
+экрана. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; ShowWindow( hWnd, SW_SHOW );&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Показать
+окно</p>
+
+<p class="textpreword">&nbsp; SetForegroundWindow( hWnd );&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Слегка
+повысим приоритет</p>
+
+<p class="textpreword">&nbsp; SetFocus( hWnd 
+);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Установить фокус
+клавиатуры на наше окно</p>
+
+<p class="textpreword">&nbsp; ReSizeGLScene( width, height );&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Настроим
+перспективу для нашего OpenGL экрана.</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Наконец мы переходим к выполнению функции InitGL(), где мы
+можем настроить освещение, текстуры и что-нибудь еще, если это необходимо. Вы
+можете сделать дополнительные проверки на ошибки в InitGL(), и передать true
+(всё OK) или false (что-то не так). Например: если Вы загружаете текстуры в
+InitGL() и возникают ошибки, Вы можете захотеть, чтобы программа остановилась.
+Если InitGL() возвращает главной функции false, строчки кода ниже среагируют на
+это сообщением об ошибке и программа завершится. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; if( !InitGL() 
+)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Инициализация только
+что созданного окна</p>
+
+<p class="textpreword">&nbsp; <span lang="EN-US">{</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; KillGLWindow();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // </span>Восстановить
+экран</p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; MessageBox( NULL,
+_T("Initialization Failed."), _T("ERROR"), MB_OK |
+MB_ICONEXCLAMATION );</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp; </span>return false;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Вернуть false</p>
+
+<p class="textpreword">&nbsp; }</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Если программа дошла до этого момента, логично предположить,
+что создание окна закончилось успехом. Мы возвращаем true в WinMain(), что
+сообщает о том, что не возникло никаких ошибок. То есть мы не выходим из
+программы, а благополучно продолжаем работу. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; return 
+true;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Всё в порядке!</p>
+
+<p class="textpreword">}</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Это то место, где будет происходить обработка сообщений для
+окна. Когда мы регистрируем класс окна, мы указываем эту функцию обработки
+сообщений. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword"><span lang="EN-US">LRESULT</span><span lang="EN-US"> </span><span lang="EN-US">CALLBACK</span><span lang="EN-US"> </span><span lang="EN-US">WndProc</span>(&nbsp;
+<span lang="EN-US">HWND</span>&nbsp; <span lang="EN-US">hWnd</span>,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Дескриптор
+нужного окна</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+UINT&nbsp; 
+uMsg,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+// Сообщение для этого окна</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+WPARAM&nbsp; 
+wParam,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Дополнительная
+информация</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+LPARAM&nbsp; 
+lParam)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Дополнительная
+информация</p>
+
+<p class="textpreword">{</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Код ниже устанавливает uMsg как параметр, с которым мы будем
+сравнивать все блоки. uMsg будет хранить название сообщения, с которым мы будем
+работать. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; switch 
+(uMsg)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Проверка сообщения для
+окна</p>
+
+<p class="textpreword">&nbsp; {</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Если uMsg - WM_ACTIVATE проверяем, активно ли еще наше окно.
+Если оно минимизировано, переменная active будет равна false. Если окно
+активно, переменная active будет равна true. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; case WM_ACTIVATE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Проверка сообщения
+активности окна</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; {</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if( !HIWORD( wParam ) )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Проверить
+состояние минимизации</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; active
+ = true;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;// 
+Программа активна</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; else</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; active
+ = false;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 
+Программа теперь не
+активна</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+
+<p class="textpreword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 
+0;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 
+Возвращаемся в цикл
+обработки сообщений</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; }</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Если возникло сообщение WM_SYSCOMMAND (системная команда) мы
+будем сравнивать состояния по параметру wParam. Если wParam - SC_SCREENSAVE или
+SC_MONITORPOWER, то или запускается скринсейвер (программа сохранения экрана)
+или монитор пытается перейти в режим сбережения энергии. Возвращая ноль мы
+предотвращаем наступлению обоих этих событий. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; case WM_SYSCOMMAND:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Перехватываем
+системную команду</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; {</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; switch ( wParam 
+)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 
+Останавливаем системный
+вызов</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; case SC_SCREENSAVE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Пытается ли
+запустится скринсейвер?</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; case SC_MONITORPOWER:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Пытается ли
+монитор перейти в режим сбережения энергии?</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 0;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Предотвращаем это</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; break;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Выход</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; }</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Если uMsg - WM_CLOSE окно будет закрыто. Мы отправляем сообщение
+о выходе, чтобы прервать выполнение главного цикла. Переменная done будет установлена
+в true, главный цикл в WinMain() будет остановлен и программа будет закрыта. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; case 
+WM_CLOSE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Мы получили сообщение о
+закрытие?</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; {</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PostQuitMessage( 0 );&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Отправить
+сообщение о выходе</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 0;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Вернуться назад</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; }</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Если произошло нажатие кнопки (на клавиатуре) мы можем узнать
+какая клавиша это была считав wParam. Тогда я делаю, чтобы эта ячейка в массиве
+keys[ ] содержала true. Таким образом, я могу считать этот массив позже и найти
+какая клавиша была нажата. Это позволяет отследить нажатия сразу несколько
+клавиш одновременно. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; case WM_KEYDOWN:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Была ли нажата кнопка?</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; {</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; keys[wParam] = 
+true;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Если так,
+ мы присваиваем
+этой ячейке true</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 0;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Возвращаемся</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; }</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Если кнопка была отпущена мы можем узнать какая клавиша это
+была считав wParam. Тогда мы делаем, чтобы эта ячейка в массиве keys[ ] была
+равна false. Таким образом, когда Вы считываете эту ячейку, Вы будете знать
+нажата ли она до сих пор или была отпущена. Другие кнопки на клавиатуре могут
+быть представлены в диапазоне 0-255. Когда мы нажимаем кнопку со скан-кодом 40,
+например, keys[40] вернёт true. Когда я её отпущу, она вернёт false. Вот так мы
+используем ячейки для хранения нажатых клавиш. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; case 
+WM_KEYUP:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Была ли отпущена
+клавиша?</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; {</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; keys[wParam] = 
+false;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //&nbsp; 
+Если так, мы присваиваем
+этой ячейке false</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;return 0;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Возвращаемся</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; }</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Всякий раз, когда изменяются размеры нашего окна uMsg в
+конечном счёте будет иметь значение WM_SIZE. Мы считываем LOWORD и HIWORD
+(младшее и старшее слова) переменной lParam для того, чтобы узнать новые высоту
+и ширину окна. Мы передаём эти аргументы функции ReSizeGLScene(). OpenGL сцена
+перерисуется с новой шириной и высотой. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; case 
+WM_SIZE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Изменены размеры OpenGL
+окна</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; {</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ReSizeGLScene( LOWORD(lParam), HIWORD(lParam) );&nbsp; //
+Младшее слово=Width, старшее слово=Height</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 0;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Возвращаемся</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; }</p>
+
+<p class="textpreword">&nbsp; }</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Любое сообщение, которое мы не проверили, будет передано в
+качестве фактического параметра функции DefWindowProc для того, чтобы Windows могла
+его обработать. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; // пересылаем все необработанные сообщения DefWindowProc</p>
+
+<p class="textpreword">&nbsp; return DefWindowProc( hWnd, uMsg, wParam, lParam );</p>
+
+<p class="textpreword">}</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Это входная точка в наше Windows приложение. Это то место,
+где мы вызываем операцию создания нашего окна, работаем с оконными сообщениями
+и отслеживаем действия пользователя. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword"><span lang="EN-US">int WINAPI WinMain(&nbsp; HINSTANCE&nbsp; hInstance,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// </span>Дескриптор приложения</p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HINSTANCE&nbsp; hPrevInstance,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+</span>Дескриптор родительского приложения</p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LPSTR&nbsp;&nbsp;&nbsp; lpCmdLine,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // </span>Параметры
+командной строки</p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>int&nbsp;&nbsp;&nbsp; nCmdShow )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+Состояние отображения окна</p>
+
+<p class="textpreword">{</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Мы инициализируем две переменные. Переменная msg будет
+использоваться для того, чтобы проверить существует ли какое-нибудь ожидающее обработки
+сообщение. Переменная done при старте будет равна false. Это означает, что наша
+программа не закончила своего выполнения. Пока done равно false программа будет
+продолжать выполнение. Как только done изменит значение с f<span lang="EN-US">a</span>lse
+на true - наша программа закончит выполнение. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; MSG&nbsp; msg;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Структура для хранения
+сообщения Windows</p>
+
+<p class="textpreword">&nbsp; BOOL&nbsp; done = false;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Логическая переменная
+для выхода из цикла</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Эта секция кода является полностью дополнительной. Она
+вызовет всплывающее окно, которое спросит, хотите ли Вы запустить приложение в
+полноэкранном режиме. Если пользователь кликнет на кнопке "NO",
+переменная изменится с true (по умолчанию) на false и программа запустится в
+оконном режиме. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; // Спрашивает пользователя, какой режим экрана он
+предпочитает</p>
+
+<p class="textpreword">&nbsp; if( MessageBox( NULL, "Хотите ли Вы запустить приложение
+в полноэкранном режиме?",&nbsp; "Запустить в полноэкранном режиме?",
+MB_YESNO | MB_ICONQUESTION) == IDNO )</p>
+
+<p class="textpreword">&nbsp; {</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; fullscreen = false;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Оконный режим</p>
+
+<p class="textpreword">&nbsp; }</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Тут мы задаем, как будет создано окно. Мы передаём заголовок,
+ширину, высоту, глубину цвета и true (полноэкранный режим) или false (оконный
+режим) функции CreateGLWindow. Вот так! Я вполне доволен такой простотой кода.
+Если окно не будет создано по какой бы то ни было причине, CreateGLWindow
+вернёт false и наша программа немедленно завершиться (return 0).</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; <span lang="EN-US">// </span>Создать наше<span lang="EN-US">
+OpenGL </span>окно</p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp; if( !CreateGLWindow( "NeHe OpenGL </span>окно<span lang="EN-US">", 1024, 768, 32, fullscreen ) )</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp; </span>{</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; return 
+0;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Выйти, если окно не может
+быть создано</p>
+
+<p class="textpreword">&nbsp; }</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Здесь стартует наш цикл. Пока done равно false цикл будет
+повторяться. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; while( !done 
+)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Цикл продолжается, пока
+done не равно true</p>
+
+<p class="textpreword">&nbsp; {</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Первым делом мы должны проверить стоит ли в очереди
+какое-нибудь сообщение. Используя PeekMessage() мы можем сделать это без остановки
+выполнения нашей программы. Многие программы используют GetMessage(). Это
+работает не плохо, но при вызове GetMessage() Ваша программа ничего не делает,
+пока не получит сообщение о перерисовке или ещё какое-либо другое сообщение. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; if( PeekMessage( &amp;msg, NULL, 0, 0, PM_REMOVE ) )&nbsp;&nbsp;&nbsp;
+// Есть ли в очереди какое-нибудь сообщение?</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; {</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">В следующей секции кода мы проверяем, есть ли в очереди
+сообщение о выходе. Если текущее сообщение WM_QUIT, это повод для вызова
+PostQuitMessage( 0 ), установки переменной done в true и завершения программы. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if( msg.message == WM_QUIT )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Мы поучили
+сообщение о выходе?</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span lang="EN-US">{</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; done = true;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // </span>Если
+так<span lang="EN-US">, done=true</span></p>
+
+<p class="textpreword"><span lang="EN-US">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+else&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Если нет, обрабатывает
+сообщения</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Если сообщение в очереди не сообщение о выходе, мы преобразуем
+сообщение, затем отсылаем его так, чтобы WndProc() или Windows могли работать с
+ним. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+TranslateMessage( &amp;msg );&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+// Переводим сообщение</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+DispatchMessage( &amp;msg );&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+// Отсылаем сообщение</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;}</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; }</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; 
+else&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Если нет сообщений</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; {</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Если не было сообщений, мы рисуем нашу сцену. Первая строчка
+кода ниже проверяет активно ли окно. Если нажата кнопка ESC, переменная done
+устанавливается в true, приводя к выходу из программы. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Прорисовываем сцену.</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if( active )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Активна ли программа?</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(keys[VK_ESCAPE])&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Было ли нажата
+клавиша ESC?</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; done = true;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // ESC говорит об останове
+выполнения программы</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+
+<p class="textpreword">&nbsp; 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Не время для выхода, обновим
+экран.</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Если программа активна и не нажата ESC мы визуализируем сцену
+и меняем буфер (используя двойную буферизацию мы исключаем мерцание при
+анимации). Используя двойную буферизацию мы рисуем всё на "скрытом
+экране" (второй буфер) так, чтобы мы не могли видеть этого. Когда мы
+меняем буфер, экран (первый буфер), который мы видим, становится скрытым, а
+скрытый - становится видимым. Таким образом, мы не видим саму прорисовку сцены,
+а только результат визуализации. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DrawGLScene();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Рисуем сцену</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SwapBuffers( hDC );&nbsp;&nbsp;&nbsp; // Меняем буфер (двойная
+буферизация)</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Следующий код позволяет нам менять полноэкранный режим на
+оконный и обратно, нажимая клавишу F1. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if( keys[VK_F1] )&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Была ли нажата F1?</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; keys[VK_F1] = false;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Если так, меняем
+значение ячейки массива на false</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+KillGLWindow();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+ Разрушаем текущее окно</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fullscreen = !fullscreen;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Переключаем
+режим</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Пересоздаём наше OpenGL окно</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if( !CreateGLWindow( _T("NeHe OpenGL
+структура"), 1024, 768, 32, fullscreen ) )</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ return 0;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Выходим, если 
+это невозможно</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+
+<p class="textpreword">&nbsp;&nbsp;&nbsp; }</p>
+
+<p class="textpreword">&nbsp; }</p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textword">Если переменная done больше не false, программа завершается.
+Мы корректно разрушаем наше OpenGL окно, чтобы всё было освобождено и выходим
+из программы. </p>
+
+<p class="textword">&nbsp;</p>
+
+<p class="textpreword">&nbsp; // Shutdown</p>
+
+<p class="textpreword">&nbsp; 
+KillGLWindow();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ // Разрушаем окно</p>
+
+<p class="textpreword">&nbsp; return ( msg.wParam );&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Выходим из
+программы</p>
+
+<p class="textpreword">}</p>
+
+<p class="textword"><span lang="EN-US">&nbsp;</span></p>
+
+<p class="textword">В этом уроке я попытался объяснить как можно больше деталей
+каждого шага запутанной установки, и создания ваших собственных полноэкранных
+OpenGL программ, которые будут завершаться при нажатии ESC и контролировать
+активно ли окно или нет. Я потратил две недели на написание кода, неделю на
+исправление ошибок и общаясь с программистскими гуру, и еще два дня (около 22
+часов на написания этого HTML файла). Если у Вас есть любые комментарии или
+вопросы, пожалуйста, пошлите их мне по электронной почте. Если Вы поняли, что я
+некорректно прокомментировал что-то или что код должен быть лучше в некоторых
+секциях по некоторым причинам, пожалуйста, дайте мне знать. Я хочу сделать
+уроки по OpenGL хорошими насколько смогу. Я заинтересован в обратной связи. </p>
+
+<p class="textnoalign" align="right">
+<font color="#0000A0"><b> © Jeff Molofee (NeHe) </b></font><br>
+</p>          
+</div>
+
+<div style="width: 1000px;" id="end">
+<p align="center">
+<a href="http://pmg.org.ru/" onmouseover=" return event_over(this,'Программирование магических игр')  " onmouseout=" return event_out(this) ">
+<font class="link"><b>PMG</b></font></a>
+
+<font class="comment">&nbsp;8 февраля 2007&nbsp;(c)&nbsp;</font>
+
+<a href="mailto:Zaharcev777@yandex.ru" onmouseover=" return event_over(this,'Почта переводчику')  " onmouseout=" return event_out(this) ">
+<font class="link"><b>Евгений Захарцев</b></font></a>
+</p>
+</div>
+
+</center>
+
+<script language="JavaScript">
+<!--
+form_print();
+//-->
+</script>
+
+
+
+</body></html>
